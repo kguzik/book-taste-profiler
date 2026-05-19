@@ -4,22 +4,17 @@ import { useState } from 'react';
 import Link from 'next/link';
 import CloseIcon from '@/components/icons/CloseIcon';
 import HamburgerIcon from '@/components/icons/HamburgerIcon';
+import Logo from '@/components/layout/Logo';
 import { headerContent, navLinks } from '@/data/header';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { logoText, logoDimText, loginLabel, openMenuLabel, closeMenuLabel } =
-    headerContent;
+  const { loginLabel, openMenuLabel, closeMenuLabel } = headerContent;
 
   return (
     <header className='sticky top-0 z-50 border-b border-white/8 bg-[#0a0a0a]/95 backdrop-blur-sm'>
       <div className='mx-auto flex max-w-6xl items-center justify-between px-6 py-4'>
-        <Link
-          href='/'
-          className='text-sm font-medium tracking-widest text-white uppercase'
-        >
-          {logoText} <span className='text-white/35'>{logoDimText}</span>
-        </Link>
+        <Logo />
 
         <nav className='hidden items-center gap-8 md:flex'>
           {navLinks.map(({ label, href }) => (
