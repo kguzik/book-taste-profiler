@@ -1,4 +1,4 @@
-import Hero from '@/features/home/Hero';
+import Hero from '@/components/sections/Hero';
 import { heroContent } from '@/data/home';
 
 export default function Home() {

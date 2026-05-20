@@ -41,6 +41,7 @@ The app should later recommend books based on semantic taste similarity, not onl
 - Use ES modules import/export syntax
 - Use TypeScript types when useful, but avoid excessive complexity
 - Prefer `type` over `interface` unless declaration merging or class-style extension is needed.
+- Reusable components (components/sections) should receive content and configuration via props instead of hardcoding text. Optional props should be rendered conditionally: if an optional prop is not provided, the related element should not be displayed. Components should use the shared `Container` component for consistent layout width and spacing. If a component contains buttons or button-like CTAs, use the shared `Button` component.
 
 ## Workflow
 

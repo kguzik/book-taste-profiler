@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -23,4 +23,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  p {
+    @apply text-base leading-relaxed text-white/45;
+  }
+
+  h1 {
+    @apply text-4xl font-semibold leading-tight tracking-tight text-white;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold leading-tight tracking-tight text-white;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold leading-tight tracking-tight text-white;
+  }
+
+  h4 {
+    @apply text-xl font-semibold leading-snug text-white;
+  }
 }

@@ -46,7 +46,7 @@ export default function Hero({
             </p>
           )}
 
-          <h1 className='mb-6 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl sm:leading-tight'>
+          <h1 className='mb-6 text-4xl max-w-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl sm:leading-tight'>
             {heading}
             {headingDim && (
               <span className='text-white/50'> {headingDim} </span>
@@ -54,11 +54,7 @@ export default function Hero({
             {headingSuffix}
           </h1>
 
-          {description && (
-            <p className='mb-10 max-w-xl text-base leading-relaxed text-white/45'>
-              {description}
-            </p>
-          )}
+          {description && <p className='mb-10 max-w-xl'>{description}</p>}
 
           {(primaryCta || secondaryCta) && (
             <div className='flex flex-col items-center gap-3 sm:flex-row'>
