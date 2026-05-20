@@ -40,6 +40,7 @@ The app should later recommend books based on semantic taste similarity, not onl
 - Keep the UI modern, minimal, dark, aesthetic and premium
 - Use ES modules import/export syntax
 - Use TypeScript types when useful, but avoid excessive complexity
+- Prefer `type` over `interface` unless declaration merging or class-style extension is needed.
 
 ## Workflow
 
