@@ -1,5 +1,6 @@
+import CardGrid from '@/components/sections/CardGrid';
 import Hero from '@/components/sections/Hero';
-import { heroContent } from '@/data/home';
+import { heroContent, howItWorksContent } from '@/data/home';
 
 export default function Home() {
   return (
@@ -13,6 +14,11 @@ export default function Home() {
         primaryCta={heroContent.primaryCta}
         secondaryCta={heroContent.secondaryCta}
         backgroundImage='/images/hero-background.jpg'
+      />
+      <CardGrid
+        eyebrow={howItWorksContent.eyebrow}
+        heading={howItWorksContent.heading}
+        cards={howItWorksContent.cards}
       />
     </main>
   );
