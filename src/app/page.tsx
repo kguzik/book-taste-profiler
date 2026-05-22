@@ -1,6 +1,7 @@
 import CardGrid from '@/components/sections/CardGrid';
 import Hero from '@/components/sections/Hero';
-import { heroContent, howItWorksContent } from '@/data/home';
+import VibeTags from '@/components/sections/VibeTags';
+import { heroContent, howItWorksContent, vibeTagsContent } from '@/data/home';
 
 export default function Home() {
   return (
@@ -19,6 +20,12 @@ export default function Home() {
         eyebrow={howItWorksContent.eyebrow}
         heading={howItWorksContent.heading}
         cards={howItWorksContent.cards}
+      />
+      <VibeTags
+        eyebrow={vibeTagsContent.eyebrow}
+        heading={vibeTagsContent.heading}
+        description={vibeTagsContent.description}
+        rows={vibeTagsContent.rows}
       />
     </main>
   );

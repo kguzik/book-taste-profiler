@@ -46,3 +46,13 @@ body {
     @apply text-xl font-semibold leading-snug text-white;
   }
 }
+
+@theme {
+  --animate-marquee: marquee 35s linear infinite;
+  --animate-marquee-reverse: marquee 35s linear infinite reverse;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

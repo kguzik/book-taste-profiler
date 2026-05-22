@@ -23,6 +23,39 @@ export const howItWorksContent = {
   ],
 };
 
+export const vibeTagsContent = {
+  eyebrow: 'Built for readers who feel everything',
+  heading: 'Beyond genre',
+  description:
+    'We understand taste the way you do - in textures, emotions, and atmosphere.',
+  rows: [
+    [
+      'melancholic atmosphere',
+      'slow burn',
+      'found family',
+      'unreliable narrator',
+      'lyrical prose',
+      'nonlinear timeline',
+      'enemies to lovers',
+      'dark academia',
+      'quiet endings',
+      'gothic setting',
+    ],
+    [
+      'moral ambiguity',
+      'grief & loss',
+      'epistolary',
+      'hopeful melancholy',
+      'witty dialogue',
+      'introspective',
+      'political solitude',
+      'bittersweet ending',
+      'coming of age',
+      'coastal setting',
+    ],
+  ],
+};
+
 export const heroContent = {
   eyebrow: 'Your reading taste, decoded',
   heading: 'Find your next book based on',
