@@ -35,9 +35,9 @@ export default function CardGrid({
         )}
 
         <div className='flex flex-wrap justify-center gap-6'>
-          {cards.map((card, index) => (
+          {cards.map((card) => (
             <div
-              key={index}
+              key={card.title}
               className='basis-full md:basis-[calc((100%-1.5rem)/2)] lg:basis-[calc((100%-3rem)/3)] rounded-2xl border border-white/8 bg-white/[0.02] p-8'
             >
               {card.subtitle && (

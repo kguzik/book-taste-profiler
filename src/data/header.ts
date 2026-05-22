@@ -1,7 +1,6 @@
 export const navLinks = [
-  { label: 'Discover', href: '/discover' },
-  { label: 'How it works', href: '/how-it-works' },
   { label: 'Taste profile', href: '/taste-profile' },
+  { label: 'How it works', href: '/how-it-works' },
 ];
 
 export const headerContent = {
