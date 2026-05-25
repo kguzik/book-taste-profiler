@@ -1,4 +1,5 @@
 export const navLinks = [
+  { label: 'Library', href: '/library' },
   { label: 'Taste profile', href: '/taste-profile' },
   { label: 'How it works', href: '/how-it-works' },
 ];

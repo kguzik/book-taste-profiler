@@ -1,20 +1,19 @@
-type RawBook = {
-  key: string;
+export type BookSearchResult = {
+  id: string;
   title: string;
-  author_name?: string[];
-  cover_i?: number;
-  first_publish_year?: number;
+  author?: string;
+  year?: number;
+  coverUrl?: string;
 };
 
-export type OpenLibraryResponse = {
-  docs: RawBook[];
-  numFound: number;
-};
-
-export type Book = {
-  key: string;
+export type SavedBook = {
+  id: string;
+  sourceId?: string;
   title: string;
-  authors?: string[];
-  coverId?: number;
-  publishYear?: number;
+  author?: string;
+  year?: number;
+  coverUrl?: string;
+  notes?: string;
+  tags: string[];
+  createdAt: string;
 };

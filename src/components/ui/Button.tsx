@@ -9,6 +9,7 @@ type Props = {
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 };
 
 const styles: Record<Variant, string> = {
@@ -18,7 +19,7 @@ const styles: Record<Variant, string> = {
 };
 
 const base =
-  'inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer';
+  'inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
 
 export default function Button({
   variant = 'primary',
@@ -27,6 +28,7 @@ export default function Button({
   type = 'button',
   onClick,
   className = '',
+  disabled,
 }: Props) {
   const btnStyles = `${base} ${styles[variant]}${className ? ` ${className}` : ''}`;
 
@@ -39,7 +41,7 @@ export default function Button({
   }
 
   return (
-    <button type={type} onClick={onClick} className={btnStyles}>
+    <button type={type} onClick={onClick} disabled={disabled} className={btnStyles}>
       {children}
     </button>
   );

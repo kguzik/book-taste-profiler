@@ -1,17 +1,13 @@
-import BookSearch from '@/features/book-search/BookSearch';
-import Container from '@/components/ui/Container';
+import PageHero from '@/components/sections/PageHero';
 
-export default function SearchPage() {
+export default function TasteProfilePage() {
   return (
     <main className='flex flex-1 flex-col bg-black/90'>
-      <Container className='pb-10 pt-16 text-center'>
-        <h1 className='mb-4'>Find your next book</h1>
-        <p className='mx-auto max-w-md'>
-          Search by title, author, or theme to discover books that match your
-          taste.
-        </p>
-      </Container>
-      <BookSearch />
+      <PageHero
+        eyebrow='Taste profile'
+        heading='Your reading taste'
+        description='Coming soon.'
+      />
     </main>
   );
 }

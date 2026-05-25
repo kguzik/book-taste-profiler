@@ -47,3 +47,5 @@ The app should later recommend books based on semantic taste similarity, not onl
 
 - Run lint after larger code changes
 - Prefer editing existing files over creating unnecessary new ones
+- Persistence: client-side only. User data (e.g. saved books) lives in `localStorage`, accessed only via a `"use client"`, SSR-safe hook (read in `useEffect`, never during render). No component touches `localStorage` directly — keeps storage swappable for a future API.
+- External data: book search uses the keyless Open Library API via native `fetch`, kept behind `searchBooks()` in `src/lib/book-search.ts` so the source stays swappable. No backend, no keys, no new packages. Only sanctioned external call for now.

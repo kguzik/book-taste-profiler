@@ -1,20 +1,25 @@
 import Image from 'next/image';
-import { getBookCoverUrl } from '@/lib/bookSearch';
-import type { Book } from '@/types/book';
+import type { BookSearchResult } from '@/types/book';
 
 type Props = {
-  book: Book;
+  book: BookSearchResult;
+  onClick?: () => void;
 };
 
-export default function BookCard({ book }: Props) {
-  const { title, authors, coverId, publishYear } = book;
+const cardBase =
+  'flex gap-4 rounded-xl border border-white/8 bg-white/[0.02] p-4 transition-colors duration-200';
+const cardIdle = 'hover:border-white/15 hover:bg-white/[0.04]';
+const cardClickable = 'cursor-pointer hover:border-white/20 hover:bg-white/[0.06] w-full text-left';
 
-  return (
-    <div className='flex gap-4 rounded-xl border border-white/8 bg-white/[0.02] p-4 transition-colors duration-200 hover:border-white/15 hover:bg-white/[0.04]'>
+export default function BookCard({ book, onClick }: Props) {
+  const { title, author, year, coverUrl } = book;
+
+  const content = (
+    <>
       <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-md bg-white/5'>
-        {coverId ? (
+        {coverUrl ? (
           <Image
-            src={getBookCoverUrl(coverId)}
+            src={coverUrl}
             alt={title}
             fill
             className='object-cover'
@@ -31,15 +36,27 @@ export default function BookCard({ book }: Props) {
         <p className='truncate text-sm font-medium leading-snug text-white/90'>
           {title}
         </p>
-        {authors?.[0] && (
-          <p className='truncate text-xs leading-none text-white/45'>
-            {authors[0]}
-          </p>
+        {author && (
+          <p className='truncate text-xs leading-none text-white/45'>{author}</p>
         )}
-        {publishYear && (
-          <p className='text-xs leading-none text-white/25'>{publishYear}</p>
+        {year && (
+          <p className='text-xs leading-none text-white/25'>{year}</p>
         )}
       </div>
-    </div>
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type='button'
+        onClick={onClick}
+        className={`${cardBase} ${cardClickable}`}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <div className={`${cardBase} ${cardIdle}`}>{content}</div>;
 }
