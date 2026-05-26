@@ -1,4 +1,6 @@
 import Pill from '@/components/ui/Pill';
+import Text from '@/components/ui/Text';
+import { libraryContent } from '@/data/library';
 import type { SavedBook } from '@/types/book';
 
 type Props = {
@@ -17,12 +19,11 @@ function formatDate(iso: string) {
 export default function SavedBooksList({ books, removeBook }: Props) {
   if (books.length === 0) {
     return (
-      <div className='flex flex-col items-center py-20 text-center'>
-        <p className='text-sm text-white/20'>No books added yet.</p>
-        <p className='mt-1 text-sm text-white/15'>
-          Add a book above to start building your taste profile.
-        </p>
-      </div>
+      <Text
+        className='py-4'
+        heading={libraryContent.emptyHeading}
+        subtext={libraryContent.emptySubtext}
+      />
     );
   }
 
@@ -59,10 +60,10 @@ export default function SavedBooksList({ books, removeBook }: Props) {
                 <button
                   type='button'
                   onClick={() => removeBook(book.id)}
-                  aria-label={`Remove ${book.title}`}
+                  aria-label={`${libraryContent.removeBook} ${book.title}`}
                   className='shrink-0 text-xs text-white/20 transition-colors duration-200 hover:text-white/60'
                 >
-                  Remove
+                  {libraryContent.removeBook}
                 </button>
               </div>
 

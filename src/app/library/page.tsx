@@ -23,15 +23,14 @@ export default function LibraryPage() {
           <h4 className='mb-6'>{libraryContent.addBookHeading}</h4>
           <AddBookPanel addBook={addBook} />
         </div>
-
-        <div>
-          <h4 className='mb-6'>
-            {books.length > 0
-              ? `${books.length} book${books.length === 1 ? '' : 's'} saved`
-              : 'Saved books'}
-          </h4>
-          <SavedBooksList books={books} removeBook={removeBook} />
-        </div>
+        {books.length > 0 && (
+          <div>
+            <h4 className='mb-6'>
+              {books.length} book{books.length === 1 ? '' : 's'} saved
+            </h4>
+          </div>
+        )}
+        <SavedBooksList books={books} removeBook={removeBook} />
       </Container>
     </main>
   );

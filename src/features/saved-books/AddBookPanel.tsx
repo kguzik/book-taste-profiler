@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import BookSearch from '@/features/book-search/BookSearch';
 import TagSelector from '@/features/saved-books/TagSelector';
 import type { BookSearchResult, SavedBook } from '@/types/book';
+import { addBookPanelContent } from '@/data/add-book-panel';
 
 type AddBookInput = Omit<SavedBook, 'id' | 'createdAt'>;
 
@@ -70,7 +71,7 @@ export default function AddBookPanel({ addBook }: Props) {
           onClick={() => setSelected(null)}
           className='shrink-0 text-xs text-white/30 transition-colors duration-200 hover:text-white/70'
         >
-          Change
+          {addBookPanelContent.changeBook}
         </button>
       </div>
 
@@ -79,13 +80,13 @@ export default function AddBookPanel({ addBook }: Props) {
           htmlFor='notes'
           className='text-xs font-medium tracking-widest text-white/30 uppercase'
         >
-          What resonated
+          {addBookPanelContent.notesLabel}
         </label>
         <textarea
           id='notes'
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder='What made this book stay with you? The atmosphere, a character, the ending…'
+          placeholder={addBookPanelContent.notesPlaceholder}
           rows={3}
           className='w-full resize-none rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-white/25 focus:outline-none transition-colors duration-200'
         />
@@ -93,13 +94,13 @@ export default function AddBookPanel({ addBook }: Props) {
 
       <div className='flex flex-col gap-3'>
         <p className='text-xs font-medium tracking-widest text-white/30 uppercase'>
-          Vibe tags
+          {addBookPanelContent.vibeTagsLabel}
         </p>
         <TagSelector selected={tags} onToggle={handleToggle} />
       </div>
 
       <div className='flex justify-end'>
-        <Button onClick={handleSave}>Save to library</Button>
+        <Button onClick={handleSave}>{addBookPanelContent.saveButton}</Button>
       </div>
     </div>
   );
