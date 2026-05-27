@@ -6,6 +6,7 @@ import AddBookPanel from '@/features/saved-books/AddBookPanel';
 import SavedBooksList from '@/features/saved-books/SavedBooksList';
 import { useSavedBooks } from '@/features/saved-books/useSavedBooks';
 import { libraryContent } from '@/data/library';
+import { pluralize } from '@/lib/pluralize';
 
 export default function LibraryPage() {
   const { books, addBook, removeBook } = useSavedBooks();
@@ -26,7 +27,7 @@ export default function LibraryPage() {
         {books.length > 0 && (
           <div>
             <h4 className='mb-6'>
-              {books.length} book{books.length === 1 ? '' : 's'} saved
+              {books.length} {pluralize(books.length, 'book')} saved
             </h4>
           </div>
         )}

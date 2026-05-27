@@ -64,8 +64,8 @@ export const heroContent = {
   description:
     'Tell us what resonated - the atmosphere, pacing, emotional tone, relationships. We build a taste profile that goes beyond genre to surface books that feel exactly right.',
   primaryCta: {
-    label: 'Start building my taste profile',
-    href: '/taste-profile',
+    label: 'Add a book',
+    href: '/library',
   },
   secondaryCta: {
     label: 'See how it works',
