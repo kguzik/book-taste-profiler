@@ -1,5 +1,6 @@
 import PageHero from '@/components/sections/PageHero';
-import { howItWorksContent } from '@/data/how-it-works';
+import CardGrid from '@/components/sections/CardGrid';
+import { howItWorksContent } from '@/data/home';
 
 export default function HowItWorksPage() {
   return (
@@ -8,6 +9,7 @@ export default function HowItWorksPage() {
         eyebrow={howItWorksContent.eyebrow}
         heading={howItWorksContent.heading}
       />
+      <CardGrid cards={howItWorksContent.cards} />
     </main>
   );
 }
