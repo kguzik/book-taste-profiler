@@ -1,4 +1,31 @@
+import type { SavedBook } from '@/types/book';
+
 export const MIN_BOOKS_FOR_PROFILE = 3;
+
+export function buildTasteProfilePrompt(books: SavedBook[]): string {
+  const bookList = books
+    .map((b) => {
+      const tags = b.tags.join(', ') || 'none';
+      const notes = b.notes ? `; notes: "${b.notes}"` : '';
+      return `- "${b.title}" by ${b.author ?? 'Unknown'} (tags: ${tags}${notes})`;
+    })
+    .join('\n');
+
+  return `You are a literary taste analyst. Based on the following books a user loved and the vibe tags they selected, write a 3-4 sentence taste profile summary and recommend 3 books they would likely enjoy.
+
+Books:
+${bookList}
+
+Respond in this exact JSON format:
+{
+  "summary": "...",
+  "recommendations": [
+    { "title": "...", "author": "...", "reason": "..." },
+    { "title": "...", "author": "...", "reason": "..." },
+    { "title": "...", "author": "...", "reason": "..." }
+  ]
+}`;
+}
 
 export const tasteProfileContent = {
   hero: {
@@ -15,8 +42,14 @@ export const tasteProfileContent = {
     ctaHref: '/library',
   },
   ready: {
-    heading: 'Profile visualization coming soon',
+    heading: 'Your reading taste, distilled',
     description:
-      "Your taste is mapped. We're still building the visualization - it'll be worth the wait.",
+      'Based on the books you loved and the vibes you chose, here is how your taste reads.',
+  },
+  profile: {
+    loading: 'Analysing your taste…',
+    error: 'Could not generate your profile.',
+    recommendationsHeading: 'Recommendations',
+    regenerateLabel: 'Regenerate',
   },
 };

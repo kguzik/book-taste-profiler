@@ -17,3 +17,14 @@ export type SavedBook = {
   tags: string[];
   createdAt: string;
 };
+
+export type Recommendation = {
+  title: string;
+  author: string;
+  reason: string;
+};
+
+export type TasteProfileResponse = {
+  summary: string;
+  recommendations: Recommendation[];
+};
