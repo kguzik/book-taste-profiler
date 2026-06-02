@@ -22,6 +22,7 @@ export type Recommendation = {
   title: string;
   author: string;
   reason: string;
+  coverUrl?: string;
 };
 
 export type TasteProfileResponse = {

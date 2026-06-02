@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { SavedBook, TasteProfileResponse } from '@/types/book';
 import { buildTasteProfilePrompt, MIN_BOOKS_FOR_PROFILE } from '@/data/taste-profile';
+import { fetchBookCover } from '@/lib/book-search';
 
 export async function POST(request: Request) {
   if (!process.env.OPENAI_API_KEY) {
@@ -62,5 +63,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unexpected response shape from OpenAI' }, { status: 502 });
   }
 
-  return NextResponse.json(parsed);
+  const recommendations = await Promise.all(
+    parsed.recommendations.map(async (rec) => ({
+      ...rec,
+      coverUrl: await fetchBookCover(rec.title, rec.author),
+    })),
+  );
+
+  return NextResponse.json({ ...parsed, recommendations });
 }

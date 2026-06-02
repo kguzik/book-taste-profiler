@@ -11,7 +11,7 @@ export function buildTasteProfilePrompt(books: SavedBook[]): string {
     })
     .join('\n');
 
-  return `You are a literary taste analyst. Based on the following books a user loved and the vibe tags they selected, write a 3-4 sentence taste profile summary and recommend 3 books they would likely enjoy.
+  return `You are a literary taste analyst. Based on the following books a user loved and the vibe tags they selected, write a 3-4 sentence taste profile summary written in second person, starting with "You" - for example "You love..." or "You gravitate toward..." - as if speaking directly to the reader and recommend 3 books they would likely enjoy.
 
 Books:
 ${bookList}
