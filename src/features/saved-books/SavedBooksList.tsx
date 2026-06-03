@@ -1,3 +1,4 @@
+import BookCover from '@/components/ui/BookCover';
 import Pill from '@/components/ui/Pill';
 import Text from '@/components/ui/Text';
 import { libraryContent } from '@/data/library';
@@ -35,16 +36,12 @@ export default function SavedBooksList({ books, removeBook }: Props) {
           className='rounded-xl border border-white/8 bg-white/[0.02] p-5 transition-colors duration-200 hover:border-white/12 hover:bg-white/[0.03]'
         >
           <div className='flex gap-4'>
-            {book.coverUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={book.coverUrl}
-                alt=''
-                width={48}
-                height={72}
-                className='h-[72px] w-12 shrink-0 self-start rounded object-cover'
-              />
-            )}
+            <BookCover
+              title={book.title}
+              coverUrl={book.coverUrl}
+              size='md'
+              className='self-start'
+            />
             <div className='min-w-0 flex-1'>
               <div className='flex items-start justify-between gap-4'>
                 <div>

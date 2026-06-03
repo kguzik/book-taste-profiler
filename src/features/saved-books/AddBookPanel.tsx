@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import BookCover from '@/components/ui/BookCover';
 import BookSearch from '@/features/book-search/BookSearch';
 import TagSelector from '@/features/saved-books/TagSelector';
 import type { BookSearchResult, SavedBook } from '@/types/book';
@@ -47,16 +48,11 @@ export default function AddBookPanel({ addBook }: Props) {
   return (
     <div className='flex flex-col gap-6'>
       <div className='flex items-start gap-4 rounded-xl border border-white/8 bg-white/[0.03] p-4'>
-        {selected.coverUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={selected.coverUrl}
-            alt=''
-            width={48}
-            height={72}
-            className='h-[72px] w-12 shrink-0 rounded object-cover'
-          />
-        )}
+        <BookCover
+          title={selected.title}
+          coverUrl={selected.coverUrl}
+          size='md'
+        />
         <div className='min-w-0 flex-1'>
           <p className='text-sm font-semibold text-white'>{selected.title}</p>
           {selected.author && (

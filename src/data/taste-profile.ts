@@ -4,10 +4,10 @@ export const MIN_BOOKS_FOR_PROFILE = 3;
 
 export function buildTasteProfilePrompt(books: SavedBook[]): string {
   const bookList = books
-    .map((b) => {
-      const tags = b.tags.join(', ') || 'none';
-      const notes = b.notes ? `; notes: "${b.notes}"` : '';
-      return `- "${b.title}" by ${b.author ?? 'Unknown'} (tags: ${tags}${notes})`;
+    .map((book) => {
+      const tags = book.tags.join(', ') || 'none';
+      const notes = book.notes ? `; notes: "${book.notes}"` : '';
+      return `- "${book.title}" by ${book.author ?? 'Unknown'} (tags: ${tags}${notes})`;
     })
     .join('\n');
 
