@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CloseIcon from '@/components/icons/CloseIcon';
 import HamburgerIcon from '@/components/icons/HamburgerIcon';
@@ -8,10 +9,52 @@ import Logo from '@/components/layout/Logo';
 import Button from '@/components/ui/Button';
 import Container from '@/components/ui/Container';
 import { headerContent, navLinks } from '@/data/header';
+import { useAuth } from '@/features/auth/useAuth';
+
+function truncateEmail(email: string, max = 20) {
+  return email.length > max ? `${email.slice(0, max)}…` : email;
+}
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { loginLabel, openMenuLabel, closeMenuLabel } = headerContent;
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await signOut();
+    router.push('/');
+  }
+
+  const authControls = user ? (
+    <div className='flex items-center gap-3'>
+      <span className='text-sm text-white/40' title={user.email}>
+        {truncateEmail(user.email ?? '')}
+      </span>
+      <Button variant='secondary' onClick={handleSignOut}>
+        Log out
+      </Button>
+    </div>
+  ) : (
+    <Button variant='secondary' href='/login'>
+      {loginLabel}
+    </Button>
+  );
+
+  const mobileAuthControls = user ? (
+    <div className='flex flex-col gap-3'>
+      <span className='text-sm text-white/40' title={user.email}>
+        {truncateEmail(user.email ?? '')}
+      </span>
+      <Button variant='secondary' onClick={handleSignOut}>
+        Log out
+      </Button>
+    </div>
+  ) : (
+    <Button variant='secondary' href='/login'>
+      {loginLabel}
+    </Button>
+  );
 
   return (
     <header className='sticky top-0 z-50 border-b border-white/8 bg-[#0a0a0a]/95 backdrop-blur-sm'>
@@ -30,9 +73,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className='hidden md:inline-flex'>
-          <Button variant='secondary'>{loginLabel}</Button>
-        </div>
+        <div className='hidden md:flex'>{authControls}</div>
 
         <button
           type='button'
@@ -59,9 +100,7 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-          <div className='mt-4 border-t border-white/8 pt-4'>
-            <Button variant='secondary'>{loginLabel}</Button>
-          </div>
+          <div className='mt-4 border-t border-white/8 pt-4'>{mobileAuthControls}</div>
         </div>
       )}
     </header>
