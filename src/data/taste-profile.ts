@@ -49,6 +49,7 @@ export const tasteProfileContent = {
   profile: {
     loading: 'Analysing your taste…',
     error: 'Could not generate your profile.',
+    topVibesHeading: 'Your top vibes',
     recommendationsHeading: 'Recommendations',
     regenerateLabel: 'Regenerate',
   },

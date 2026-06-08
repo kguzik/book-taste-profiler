@@ -10,13 +10,15 @@ import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
 import Text from '@/components/ui/Text';
 import RecommendationCard from './RecommendationCard';
+import TopTags from './TopTags';
 import { pluralize } from '@/lib/pluralize';
 import { saveProfile, loadProfile, clearProfile } from '@/lib/profile-cookie';
+import { selectMostUsedTags } from '@/lib/select-most-used-tags';
 import type { TasteProfileResponse } from '@/types/book';
 
 function bookFingerprint(books: ReturnType<typeof useSavedBooks>['books']) {
   return books
-    .map((b) => b.id)
+    .map((book) => book.id)
     .sort()
     .join(',');
 }
@@ -79,6 +81,7 @@ export default function TasteProfile() {
   if (!mounted) return null;
 
   const { needMoreBooks, ready, profile: profileContent } = tasteProfileContent;
+  const topTags = selectMostUsedTags(books, 8);
 
   if (books.length < MIN_BOOKS_FOR_PROFILE) {
     return (
@@ -135,6 +138,7 @@ export default function TasteProfile() {
 
           {profile && !loading && (
             <div className='space-y-8'>
+              <TopTags tags={topTags} />
               <p className='text-base leading-relaxed text-white/70'>
                 {profile.summary}
               </p>
