@@ -4,6 +4,7 @@ import { useState } from 'react';
 import BookCard from './BookCard';
 import { useBookSearch } from './useBookSearch';
 import type { BookSearchResult } from '@/types/book';
+import { libraryContent } from '@/data/library';
 
 type Props = {
   onSelect?: (book: BookSearchResult) => void;
@@ -13,10 +14,12 @@ export default function BookSearch({ onSelect }: Props) {
   const [query, setQuery] = useState('');
   const { results, loading, error } = useBookSearch(query);
 
-  const showEmpty = !loading && !error && query.trim().length >= 2 && results.length === 0;
+  const showEmpty =
+    !loading && !error && query.trim().length >= 2 && results.length === 0;
 
   return (
     <div className='flex flex-col gap-3'>
+      <h4 className='mb-2'>{libraryContent.addBookHeading}</h4>
       <input
         type='search'
         value={query}
@@ -30,9 +33,7 @@ export default function BookSearch({ onSelect }: Props) {
         <p className='text-center text-sm text-white/35'>Searching…</p>
       )}
 
-      {error && (
-        <p className='text-center text-sm text-white/35'>{error}</p>
-      )}
+      {error && <p className='text-center text-sm text-white/35'>{error}</p>}
 
       {showEmpty && (
         <p className='text-center text-sm text-white/35'>

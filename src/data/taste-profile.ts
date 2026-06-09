@@ -52,5 +52,6 @@ export const tasteProfileContent = {
     topVibesHeading: 'Your top vibes',
     recommendationsHeading: 'Recommendations',
     regenerateLabel: 'Regenerate',
+    regenerateDescription: 'Add more books to regenerate',
   },
 };

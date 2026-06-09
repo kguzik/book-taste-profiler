@@ -155,13 +155,21 @@ export default function TasteProfile() {
                   ))}
                 </div>
               </div>
-              <Button
-                variant='secondary'
-                onClick={regenerate}
-                className='text-xs'
-              >
-                {profileContent.regenerateLabel}
-              </Button>
+              <div className='flex items-center gap-3'>
+                <Button
+                  variant='secondary'
+                  onClick={regenerate}
+                  className='text-xs'
+                  disabled={books.length <= MIN_BOOKS_FOR_PROFILE}
+                >
+                  {profileContent.regenerateLabel}
+                </Button>
+                {books.length <= MIN_BOOKS_FOR_PROFILE && (
+                  <span className='text-xs text-white/25'>
+                    {profileContent.regenerateDescription}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>
