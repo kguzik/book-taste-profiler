@@ -12,7 +12,7 @@ import Text from '@/components/ui/Text';
 import RecommendationCard from './RecommendationCard';
 import TopTags from './TopTags';
 import { pluralize } from '@/lib/pluralize';
-import { saveProfile, loadProfile, clearProfile } from '@/lib/profile-cookie';
+import { saveProfile, loadProfile, clearProfile } from '@/lib/profile-cache';
 import { selectMostUsedTags } from '@/lib/select-most-used-tags';
 import type { TasteProfileResponse } from '@/types/book';
 
