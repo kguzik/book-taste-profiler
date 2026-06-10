@@ -8,6 +8,8 @@ import {
   insertSavedBook,
   deleteSavedBook,
 } from '@/lib/saved-books-supabase';
+import { loadTasteProfile, clearLocalTasteProfile } from '@/lib/profile-cache';
+import { saveTasteProfile } from '@/lib/taste-profile-supabase';
 
 const STORAGE_KEY = 'btp:saved-books';
 
@@ -42,18 +44,38 @@ export const useSavedBooks = () => {
     if (user) {
       const localBooks = readLocalBooks();
       const migrateAndFetch = async () => {
-        if (prevUserId === null && localBooks.length > 0) {
-          await Promise.all(
-            localBooks.map((book) => insertSavedBook(user.id, book)),
-          );
-          clearLocalBooks();
+        if (prevUserId === null) {
+          if (localBooks.length > 0) {
+            await Promise.all(
+              localBooks.map((book) => insertSavedBook(user.id, book)),
+            );
+            clearLocalBooks();
+          }
+          const libraryKey = localBooks
+            .map((book) => book.id)
+            .sort()
+            .join(',');
+          const localTasteProfile = loadTasteProfile(libraryKey);
+          if (localTasteProfile) {
+            await saveTasteProfile(
+              user.id,
+              localTasteProfile,
+              libraryKey,
+            ).catch(console.error);
+            clearLocalTasteProfile();
+          }
         }
         const booksFromSupabase = await fetchSavedBooks(user.id);
         setBooks(booksFromSupabase);
       };
       migrateAndFetch().catch(console.error);
-    } else if (prevUserId === undefined) {
-      setBooks(readLocalBooks());
+    } else {
+      if (prevUserId != null) {
+        clearLocalTasteProfile();
+      }
+      if (prevUserId === undefined) {
+        setBooks(readLocalBooks());
+      }
     }
   }, [user]);
 

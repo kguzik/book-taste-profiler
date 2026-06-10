@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSavedBooks } from '@/features/saved-books/useSavedBooks';
+import { useAuth } from '@/features/auth/useAuth';
 import {
   MIN_BOOKS_FOR_PROFILE,
   tasteProfileContent,
@@ -12,33 +13,66 @@ import Text from '@/components/ui/Text';
 import RecommendationCard from './RecommendationCard';
 import TopTags from './TopTags';
 import { pluralize } from '@/lib/pluralize';
-import { saveProfile, loadProfile, clearProfile } from '@/lib/profile-cache';
+import {
+  saveProfile,
+  loadTasteProfile,
+  clearLocalTasteProfile,
+} from '@/lib/profile-cache';
+import {
+  fetchsupabaseProfile,
+  saveTasteProfile,
+  clearTasteProfile,
+} from '@/lib/taste-profile-supabase';
 import { selectMostUsedTags } from '@/lib/select-most-used-tags';
-import type { TasteProfileResponse } from '@/types/book';
+import type { TasteProfile as TasteProfileData } from '@/types/book';
 
-function bookFingerprint(books: ReturnType<typeof useSavedBooks>['books']) {
+const LOCAL_PROFILE_KEY = 'btp:taste-profile';
+
+const getLibraryKey = (books: ReturnType<typeof useSavedBooks>['books']) => {
   return books
     .map((book) => book.id)
     .sort()
     .join(',');
-}
+};
+
+const loadTasteProfileFallback = (): TasteProfileData | null => {
+  try {
+    const serialized = localStorage.getItem(LOCAL_PROFILE_KEY);
+    if (!serialized) return null;
+    const stored = JSON.parse(serialized) as TasteProfileData & {
+      fingerprint?: string;
+      libraryKey?: string;
+      cachedAt?: string;
+    };
+    return {
+      summary: stored.summary,
+      recommendations: stored.recommendations,
+    };
+  } catch {
+    return null;
+  }
+};
 
 export default function TasteProfile() {
   const { books } = useSavedBooks();
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
-  const [profile, setProfile] = useState<TasteProfileResponse | null>(null);
+  const [tasteProfile, setTasteProfile] = useState<TasteProfileData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const loadedForSessionRef = useRef<string | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  const fetchProfile = useCallback(async () => {
+  const generateProfile = useCallback(async () => {
     setLoading(true);
     setError(false);
-    setProfile(null);
+    setTasteProfile(null);
     try {
       const res = await fetch('/api/taste-profile', {
         method: 'POST',
@@ -46,37 +80,72 @@ export default function TasteProfile() {
         body: JSON.stringify({ books }),
       });
       if (!res.ok) throw new Error();
-      const data: TasteProfileResponse = await res.json();
-      saveProfile(data, bookFingerprint(books));
-      setProfile(data);
+      const data: TasteProfileData = await res.json();
+      const libraryKey = getLibraryKey(books);
+      if (user) {
+        saveTasteProfile(user.id, data, libraryKey).catch(console.error);
+      } else {
+        saveProfile(data, libraryKey);
+      }
+      setTasteProfile(data);
     } catch {
       setError(true);
     } finally {
       setLoading(false);
     }
-  }, [books]);
+  }, [books, user]);
 
-  const regenerate = useCallback(() => {
-    clearProfile();
-    fetchProfile();
-  }, [fetchProfile]);
+  const regenerateProfile = useCallback(async () => {
+    if (user) {
+      await clearTasteProfile(user.id).catch(console.error);
+    } else {
+      clearLocalTasteProfile();
+    }
+    generateProfile();
+  }, [generateProfile, user]);
 
   useEffect(() => {
     if (!mounted) return;
+
+    const sessionKey = user ? user.id : 'guest';
+
     if (books.length < MIN_BOOKS_FOR_PROFILE) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setProfile(null);
+      setTasteProfile(null);
+      loadedForSessionRef.current = null;
       return;
     }
-    const fingerprint = bookFingerprint(books);
-    const cached = loadProfile(fingerprint);
-    if (cached) {
-      setProfile(cached);
-    } else {
-      fetchProfile();
-    }
+
+    if (loadedForSessionRef.current === sessionKey) return;
+    loadedForSessionRef.current = sessionKey;
+
+    const loadCachedOrGenerateProfile = async () => {
+      if (user) {
+        const supabaseProfile = await fetchsupabaseProfile(user.id);
+        if (supabaseProfile) {
+          setTasteProfile(supabaseProfile);
+        } else {
+          await generateProfile();
+        }
+      } else {
+        const libraryKey = getLibraryKey(books);
+        const cachedProfile = loadTasteProfile(libraryKey);
+        if (cachedProfile) {
+          setTasteProfile(cachedProfile);
+        } else {
+          const fallbackProfile = loadTasteProfileFallback();
+          if (fallbackProfile) {
+            setTasteProfile(fallbackProfile);
+          } else {
+            await generateProfile();
+          }
+        }
+      }
+    };
+
+    loadCachedOrGenerateProfile().catch(() => setError(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, books.length]);
+  }, [mounted, books.length, user, generateProfile]);
 
   if (!mounted) return null;
 
@@ -132,22 +201,22 @@ export default function TasteProfile() {
           {error && !loading && (
             <div className='flex items-center gap-4'>
               <p className='text-sm text-white/40'>{profileContent.error}</p>
-              <Button onClick={fetchProfile}>Retry</Button>
+              <Button onClick={generateProfile}>Retry</Button>
             </div>
           )}
 
-          {profile && !loading && (
+          {tasteProfile && !loading && (
             <div className='space-y-8'>
               <TopTags tags={topTags} />
               <p className='text-base leading-relaxed text-white/70'>
-                {profile.summary}
+                {tasteProfile.summary}
               </p>
               <div>
                 <p className='mb-4 text-xs font-medium tracking-widest text-white/25 uppercase'>
                   {profileContent.recommendationsHeading}
                 </p>
                 <div className='grid gap-4 sm:grid-cols-3'>
-                  {profile.recommendations.map((rec) => (
+                  {tasteProfile.recommendations.map((rec) => (
                     <RecommendationCard
                       key={`${rec.title}-${rec.author}`}
                       recommendation={rec}
@@ -158,7 +227,7 @@ export default function TasteProfile() {
               <div className='flex items-center gap-3'>
                 <Button
                   variant='secondary'
-                  onClick={regenerate}
+                  onClick={regenerateProfile}
                   className='text-xs'
                   disabled={books.length <= MIN_BOOKS_FOR_PROFILE}
                 >

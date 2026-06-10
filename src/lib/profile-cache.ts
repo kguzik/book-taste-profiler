@@ -1,17 +1,14 @@
-import type { TasteProfileResponse } from '@/types/book';
+import type { TasteProfile } from '@/types/book';
 
 const KEY = 'btp:taste-profile';
 const DAYS = 30;
 
-type StoredProfile = TasteProfileResponse & {
+type StoredProfile = TasteProfile & {
   fingerprint: string;
   cachedAt: string;
 };
 
-export function saveProfile(
-  data: TasteProfileResponse,
-  fingerprint: string,
-): void {
+export function saveProfile(data: TasteProfile, fingerprint: string): void {
   const stored: StoredProfile = {
     ...data,
     fingerprint,
@@ -20,7 +17,7 @@ export function saveProfile(
   localStorage.setItem(KEY, JSON.stringify(stored));
 }
 
-export function loadProfile(fingerprint: string): TasteProfileResponse | null {
+export function loadTasteProfile(fingerprint: string): TasteProfile | null {
   const serialized = localStorage.getItem(KEY);
   if (!serialized) return null;
   try {
@@ -36,6 +33,6 @@ export function loadProfile(fingerprint: string): TasteProfileResponse | null {
   }
 }
 
-export function clearProfile(): void {
+export const clearLocalTasteProfile = (): void => {
   localStorage.removeItem(KEY);
-}
+};

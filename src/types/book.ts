@@ -25,7 +25,7 @@ export type Recommendation = {
   coverUrl?: string;
 };
 
-export type TasteProfileResponse = {
+export type TasteProfile = {
   summary: string;
   recommendations: Recommendation[];
 };
