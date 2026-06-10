@@ -1,45 +1,92 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { SavedBook } from '@/types/book';
+import { useAuth } from '@/features/auth/useAuth';
+import {
+  fetchSavedBooks,
+  insertSavedBook,
+  deleteSavedBook,
+} from '@/lib/saved-books-supabase';
 
 const STORAGE_KEY = 'btp:saved-books';
 
 type AddBookInput = Omit<SavedBook, 'id' | 'createdAt'>;
 
-export function useSavedBooks() {
+const readLocalBooks = (): SavedBook[] => {
+  try {
+    const storedBooks = localStorage.getItem(STORAGE_KEY);
+    return storedBooks ? (JSON.parse(storedBooks) as SavedBook[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeLocalBooks = (books: SavedBook[]): void => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+};
+
+const clearLocalBooks = (): void => {
+  localStorage.removeItem(STORAGE_KEY);
+};
+
+export const useSavedBooks = () => {
+  const { user } = useAuth();
   const [books, setBooks] = useState<SavedBook[]>([]);
+  const prevUserIdRef = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (raw) setBooks(JSON.parse(raw));
-    } catch {
-      console.error('Failed to load saved books');
-    }
-  }, []);
+    const prevUserId = prevUserIdRef.current;
+    prevUserIdRef.current = user?.id ?? null;
 
-  function addBook(input: AddBookInput) {
-    setBooks((prev) => {
-      const book: SavedBook = {
-        ...input,
-        id: crypto.randomUUID(),
-        createdAt: new Date().toISOString(),
+    if (user) {
+      const localBooks = readLocalBooks();
+      const migrateAndFetch = async () => {
+        if (prevUserId === null && localBooks.length > 0) {
+          await Promise.all(
+            localBooks.map((book) => insertSavedBook(user.id, book)),
+          );
+          clearLocalBooks();
+        }
+        const booksFromSupabase = await fetchSavedBooks(user.id);
+        setBooks(booksFromSupabase);
       };
-      const next = [book, ...prev];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
-  }
+      migrateAndFetch().catch(console.error);
+    } else if (prevUserId === undefined) {
+      setBooks(readLocalBooks());
+    }
+  }, [user]);
 
-  function removeBook(id: string) {
-    setBooks((prev) => {
-      const next = prev.filter((b) => b.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
-  }
+  const addBook = async (input: AddBookInput) => {
+    const book: SavedBook = {
+      ...input,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+    };
+    if (user) {
+      await insertSavedBook(user.id, book);
+      setBooks((currentBooks) => [book, ...currentBooks]);
+    } else {
+      setBooks((currentBooks) => {
+        const updatedBooks = [book, ...currentBooks];
+        writeLocalBooks(updatedBooks);
+        return updatedBooks;
+      });
+    }
+  };
+
+  const removeBook = async (id: string) => {
+    if (user) {
+      await deleteSavedBook(id, user.id);
+      setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id));
+    } else {
+      setBooks((currentBooks) => {
+        const updatedBooks = currentBooks.filter((book) => book.id !== id);
+        writeLocalBooks(updatedBooks);
+        return updatedBooks;
+      });
+    }
+  };
 
   return { books, addBook, removeBook };
-}
+};
