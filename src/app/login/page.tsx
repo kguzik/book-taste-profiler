@@ -56,7 +56,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push('/library');
+    router.push(activeTab === 'signup' ? '/confirm-email' : '/library');
   }
 
   return (
