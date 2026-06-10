@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
-import type { SavedBook, TasteProfileResponse } from '@/types/book';
-import { buildTasteProfilePrompt, MIN_BOOKS_FOR_PROFILE } from '@/data/taste-profile';
+import type { SavedBook, TasteProfile } from '@/types/book';
+import {
+  buildTasteProfilePrompt,
+  MIN_BOOKS_FOR_PROFILE,
+} from '@/data/taste-profile';
 import { fetchBookCover } from '@/lib/book-search';
 
 export async function POST(request: Request) {
   if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json({ error: 'OpenAI API key not configured' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'OpenAI API key not configured' },
+      { status: 500 },
+    );
   }
 
   let books: SavedBook[];
@@ -13,7 +19,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     books = body.books;
   } catch {
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Invalid request body' },
+      { status: 400 },
+    );
   }
 
   if (!Array.isArray(books) || books.length < MIN_BOOKS_FOR_PROFILE) {
@@ -39,28 +48,40 @@ export async function POST(request: Request) {
   });
 
   if (!response.ok) {
-    return NextResponse.json({ error: 'OpenAI request failed' }, { status: 502 });
+    return NextResponse.json(
+      { error: 'OpenAI request failed' },
+      { status: 502 },
+    );
   }
 
   const data = await response.json();
   const content = data.choices?.[0]?.message?.content;
 
   if (!content) {
-    return NextResponse.json({ error: 'Empty response from OpenAI' }, { status: 502 });
+    return NextResponse.json(
+      { error: 'Empty response from OpenAI' },
+      { status: 502 },
+    );
   }
 
-  let parsed: TasteProfileResponse;
+  let parsed: TasteProfile;
   try {
     parsed = JSON.parse(content);
   } catch {
-    return NextResponse.json({ error: 'Failed to parse OpenAI response' }, { status: 502 });
+    return NextResponse.json(
+      { error: 'Failed to parse OpenAI response' },
+      { status: 502 },
+    );
   }
 
   if (
     typeof parsed.summary !== 'string' ||
     !Array.isArray(parsed.recommendations)
   ) {
-    return NextResponse.json({ error: 'Unexpected response shape from OpenAI' }, { status: 502 });
+    return NextResponse.json(
+      { error: 'Unexpected response shape from OpenAI' },
+      { status: 502 },
+    );
   }
 
   const recommendations = await Promise.all(
