@@ -43,18 +43,21 @@ export const insertSavedBook = async (
   book: SavedBook,
 ): Promise<void> => {
   const supabaseClient = createClient();
-  const { error } = await supabaseClient.from('saved_books').insert({
-    id: book.id,
-    user_id: userId,
-    source_id: book.sourceId ?? null,
-    title: book.title,
-    author: book.author ?? null,
-    year: book.year ?? null,
-    cover_url: book.coverUrl ?? null,
-    notes: book.notes ?? null,
-    tags: book.tags,
-    created_at: book.createdAt,
-  });
+  const { error } = await supabaseClient.from('saved_books').upsert(
+    {
+      id: book.id,
+      user_id: userId,
+      source_id: book.sourceId ?? null,
+      title: book.title,
+      author: book.author ?? null,
+      year: book.year ?? null,
+      cover_url: book.coverUrl ?? null,
+      notes: book.notes ?? null,
+      tags: book.tags,
+      created_at: book.createdAt,
+    },
+    { onConflict: 'id' },
+  );
   if (error) throw error;
 };
 
