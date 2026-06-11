@@ -29,6 +29,7 @@ const mapRowToSavedBook = (row: SavedBookRow): SavedBook => {
 
 export const fetchSavedBooks = async (userId: string): Promise<SavedBook[]> => {
   const supabaseClient = createClient();
+  if (!supabaseClient) throw new Error('Supabase is not configured');
   const { data, error } = await supabaseClient
     .from('saved_books')
     .select('*')
@@ -43,6 +44,7 @@ export const insertSavedBook = async (
   book: SavedBook,
 ): Promise<void> => {
   const supabaseClient = createClient();
+  if (!supabaseClient) throw new Error('Supabase is not configured');
   const { error } = await supabaseClient.from('saved_books').upsert(
     {
       id: book.id,
@@ -66,6 +68,7 @@ export const deleteSavedBook = async (
   userId: string,
 ): Promise<void> => {
   const supabase = createClient();
+  if (!supabase) throw new Error('Supabase is not configured');
   const { error } = await supabase
     .from('saved_books')
     .delete()

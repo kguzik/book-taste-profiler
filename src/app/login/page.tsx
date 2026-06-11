@@ -44,6 +44,12 @@ export default function LoginPage() {
     setLoading(true);
 
     const supabase = createClient();
+    if (!supabase) {
+      setError('Database is not available. Please try again later.');
+      setLoading(false);
+      return;
+    }
+
     const { error: authError } =
       activeTab === 'login'
         ? await supabase.auth.signInWithPassword({ email, password })

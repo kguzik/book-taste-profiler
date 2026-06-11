@@ -11,6 +11,7 @@ export async function fetchsupabaseProfile(
   userId: string,
 ): Promise<(TasteProfile & { fingerprint: string }) | null> {
   const supabaseClient = createClient();
+  if (!supabaseClient) throw new Error('Supabase is not configured');
   const { data, error } = await supabaseClient
     .from('taste_profiles')
     .select('summary, recommendations, fingerprint')
@@ -37,6 +38,7 @@ export async function saveTasteProfile(
   fingerprint: string,
 ): Promise<void> {
   const supabaseClient = createClient();
+  if (!supabaseClient) throw new Error('Supabase is not configured');
   const { error } = await supabaseClient.from('taste_profiles').upsert(
     {
       user_id: userId,
@@ -51,6 +53,7 @@ export async function saveTasteProfile(
 
 export async function clearTasteProfile(userId: string): Promise<void> {
   const supabaseClient = createClient();
+  if (!supabaseClient) throw new Error('Supabase is not configured');
   const { error } = await supabaseClient
     .from('taste_profiles')
     .delete()
