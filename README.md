@@ -2,7 +2,7 @@
 
 AI-powered reading taste profiling app. Add books you loved, describe what resonated, and get a personalised taste profile with book recommendations based on vibe and emotional similarity — not just genre.
 
-**[Live demo →](https://book-taste-profiler.vercel.app)**
+**<a href="https://book-taste-profiler.vercel.app" target="_blank" rel="noopener noreferrer">Live demo →</a>**
 
 ## Tech stack
 
@@ -19,7 +19,7 @@ Install dependencies:
 pnpm install
 ```
 
-Create a `.env.local` file in the root:
+Create a `.env` file in the root based on `.env.example`:
 
 ```env
 # Required — for AI taste profile generation
@@ -41,7 +41,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Supabase setup (optional)
 
-Create a free project at [supabase.com](https://supabase.com) and run [`supabase/schema.sql`](./supabase/schema.sql) in the SQL editor.
+Create a free project at <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">supabase.com</a> and run <a href="./supabase/schema.sql" target="_blank" rel="noopener noreferrer"><code>supabase/schema.sql</code></a> in the SQL editor.
 When creating your Supabase project, use these security settings:
 
 - **Enable Data API** — on
