@@ -1,6 +1,6 @@
 # Book Taste Profiler
 
-AI-powered reading taste profiling app. Add books you loved, describe what resonated, and get a personalised taste profile with book recommendations based on vibe and emotional similarity — not just genre.
+AI-powered reading taste profiling app. Add books you loved, describe what resonated, and get a personalised taste profile with book recommendations based on vibe and emotional similarity - not just genre.
 
 **[Live demo →](https://book-taste-profiler.vercel.app)**
 
@@ -44,9 +44,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Create a free project at [supabase.com](https://supabase.com) and run [`supabase/schema.sql`](./supabase/schema.sql) in the SQL editor.
 When creating your Supabase project, use these security settings:
 
-- **Enable Data API** — on
-- **Automatically expose new tables** — off
-- **Enable automatic RLS** — on
+- **Enable Data API** - on
+- **Automatically expose new tables** - off
+- **Enable automatic RLS** - on
 
 You can find your credentials in the Supabase dashboard:
 
