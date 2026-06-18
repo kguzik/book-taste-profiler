@@ -56,6 +56,14 @@ export const vibeTagsContent = {
   ],
 };
 
+export const notFoundContent = {
+  eyebrow: '404',
+  heading: 'Page not found',
+  description: "The page you're looking for doesn't exist or has been moved.",
+  ctaLabel: 'Go home',
+  ctaHref: '/',
+};
+
 export const heroContent = {
   eyebrow: 'Your reading taste, decoded',
   heading: 'Find your next book based on',
